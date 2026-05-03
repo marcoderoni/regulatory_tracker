@@ -256,7 +256,7 @@ def build_html(items: list["FeedItem"], title: str = "EU Regulatory Digest") -> 
       <tr>
         <td style="background:#f8f9fa;padding:16px 20px;border-top:1px solid #eee;
                    text-align:center;font-size:11px;color:#aaa;">
-          Regulatory Change Tracker · {date_str}<br>
+          Regulatory Change Tracker · Marco De Roni · {date_str}<br>
           AI Act · DORA · Data Act · NIS2 · GDPR · and more
         </td>
       </tr>
