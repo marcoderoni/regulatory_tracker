@@ -1,0 +1,66 @@
+name: Regulatory Tracker — Daily Run
+
+on:
+  schedule:
+    # Every day at 07:30 UTC (09:30 Amsterdam summer / 08:30 winter)
+    - cron: '30 7 * * *'
+  workflow_dispatch:
+    # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  run-tracker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Restore database from cache
+        uses: actions/cache@v4
+        with:
+          path: tracker.db
+          key: tracker-db-${{ github.run_id }}
+          restore-keys: |
+            tracker-db-
+
+      - name: Restore deadlines calendar from cache
+        uses: actions/cache@v4
+        with:
+          path: deadlines_calendar.json
+          key: deadlines-${{ github.run_id }}
+          restore-keys: |
+            deadlines-
+
+      - name: Run tracker
+        env:
+          RESEND_API_KEY:       ${{ secrets.RESEND_API_KEY }}
+          GEMINI_API_KEY:       ${{ secrets.GEMINI_API_KEY }}
+          EMAIL_FROM:           ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO:             ${{ secrets.EMAIL_TO }}
+          SLACK_WEBHOOK_URL:    ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_DIGEST_URL:     ${{ secrets.SLACK_DIGEST_URL }}
+          NOTION_API_KEY:       ${{ secrets.NOTION_API_KEY }}
+          NOTION_DB_ID:         ${{ secrets.NOTION_DB_ID }}
+          LOOKBACK_DAYS:        "7"
+          MIN_RELEVANCE:        "3"
+          INSTANT_ALERT_MIN:    "8"
+          DB_PATH:              "tracker.db"
+        run: python main.py
+
+      - name: Upload tracker log as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tracker-log-${{ github.run_id }}
+          path: tracker.log
+          retention-days: 14
