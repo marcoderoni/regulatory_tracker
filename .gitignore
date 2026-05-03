@@ -1,0 +1,17 @@
+# Environment — NEVER commit this
+.env
+
+# Runtime files
+tracker.db
+*.log
+deadlines_calendar.json
+digest_preview.html
+weekly_report_*.html
+brief_*.html
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
