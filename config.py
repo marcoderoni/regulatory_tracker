@@ -21,8 +21,8 @@ SLACK_DIGEST_URL   = os.getenv("SLACK_DIGEST_URL", "")
 NOTION_API_KEY   = os.getenv("NOTION_API_KEY", "")
 NOTION_DB_ID     = os.getenv("NOTION_DB_ID", "")
 
-# ── Anthropic ─────────────────────────────────────────────────────────────────
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+# ── Gemini ────────────────────────────────────────────────────────────────────
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
 # ── Tracker behaviour ─────────────────────────────────────────────────────────
 DB_PATH            = Path(os.getenv("DB_PATH", "tracker.db"))
