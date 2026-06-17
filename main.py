@@ -123,7 +123,7 @@ def run(lookback_days: int | None = None,
 
     # ── 5. AI enrichment ──────────────────────────────────────────────────────
     log.info(f"AI enrichment: {len(new_items)} items …")
-    enriched = process_items(new_items, api_key=config.ANTHROPIC_API_KEY)
+    enriched = process_items(new_items, api_key=config.GEMINI_API_KEY)
 
     # ── 6. Deadline extraction ────────────────────────────────────────────────
     log.info("Extracting consultation deadlines …")
