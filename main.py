@@ -127,7 +127,7 @@ def run(lookback_days: int | None = None,
 
     # ── 6. Deadline extraction ────────────────────────────────────────────────
     log.info("Extracting consultation deadlines …")
-    enriched = extract_deadlines(enriched, api_key=config.ANTHROPIC_API_KEY)
+    enriched = extract_deadlines(enriched, api_key=config.GEMINI_API_KEY)
     if not dry_run:
         save_calendar(enriched)
 
