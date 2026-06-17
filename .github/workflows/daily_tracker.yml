@@ -2,16 +2,14 @@ name: Regulatory Tracker — Daily Run
 
 on:
   schedule:
-    # Every day at 07:30 UTC (09:30 Amsterdam summer / 08:30 winter)
+    # Ogni giorno alle 07:30 UTC (09:30 Amsterdam estate / 08:30 inverno)
     - cron: '30 7 * * *'
   workflow_dispatch:
-    # Allows manual trigger from GitHub Actions tab
 
 jobs:
   run-tracker:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,20 +39,28 @@ jobs:
           restore-keys: |
             deadlines-
 
+      - name: Debug key presence
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          echo "GEMINI len: ${#GEMINI_API_KEY}"
+          echo "RESEND len: ${#RESEND_API_KEY}"
+
       - name: Run tracker
         env:
-          RESEND_API_KEY:       ${{ secrets.RESEND_API_KEY }}
-          GEMINI_API_KEY:       ${{ secrets.GEMINI_API_KEY }}
-          EMAIL_FROM:           ${{ secrets.EMAIL_FROM }}
-          EMAIL_TO:             ${{ secrets.EMAIL_TO }}
-          SLACK_WEBHOOK_URL:    ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_DIGEST_URL:     ${{ secrets.SLACK_DIGEST_URL }}
-          NOTION_API_KEY:       ${{ secrets.NOTION_API_KEY }}
-          NOTION_DB_ID:         ${{ secrets.NOTION_DB_ID }}
-          LOOKBACK_DAYS:        "7"
-          MIN_RELEVANCE:        "3"
-          INSTANT_ALERT_MIN:    "8"
-          DB_PATH:              "tracker.db"
+          RESEND_API_KEY:    ${{ secrets.RESEND_API_KEY }}
+          GEMINI_API_KEY:    ${{ secrets.GEMINI_API_KEY }}
+          EMAIL_FROM:        ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO:          ${{ secrets.EMAIL_TO }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_DIGEST_URL:  ${{ secrets.SLACK_DIGEST_URL }}
+          NOTION_API_KEY:    ${{ secrets.NOTION_API_KEY }}
+          NOTION_DB_ID:      ${{ secrets.NOTION_DB_ID }}
+          LOOKBACK_DAYS:     "7"
+          MIN_RELEVANCE:     "3"
+          INSTANT_ALERT_MIN: "8"
+          DB_PATH:           "tracker.db"
         run: python main.py
 
       - name: Upload tracker log as artifact
